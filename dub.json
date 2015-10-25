@@ -1,5 +1,5 @@
 {
-  "name": "commander.d",
+  "name": "commander",
   "description": "Command-line interfaces in D made easy. Easy command-line parsing based in commander.js.",
   "copyright": "Copyright © 2015, Pedro Tacla Yamada",
   "license": "MIT",
@@ -8,7 +8,7 @@
   ],
   "configurations": [
     {
-      "name": "commander.d",
+      "name": "commander",
       "targetType": "library",
       "sourcePaths": [
         "source/"
