@@ -1,0 +1,9 @@
+.dub
+__test__commander.d__
+docs.json
+__dummy.html
+*.o
+*.obj
+libcommander.d.a
+dub.selections.json
+research

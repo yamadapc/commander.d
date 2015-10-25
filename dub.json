@@ -1,0 +1,20 @@
+{
+  "name": "commander.d",
+  "description": "Command-lines in D made easy. Easy command-line parsing based in commander.js",
+  "copyright": "Copyright © 2015, Pedro Tacla Yamada",
+  "authors": [
+    "Pedro Tacla Yamada"
+  ],
+  "configurations": [
+    {
+      "name": "commander.d",
+      "targetType": "library",
+      "sourcePaths": [
+        "source/"
+      ],
+      "dependencies": {
+        "pyjamas": ">=0.2.1"
+      }
+    }
+  ]
+}
