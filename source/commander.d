@@ -58,6 +58,24 @@ class Commander {
   }
 
   unittest {
+    auto program = new Commander()
+      .option!("-v,--verbose", "Be verbose")
+      .parse(["rdmd", "app.d", "-v"]);
+    assert(program.flag("verbose") == true);
+    assert(program.param("output") is null);
+  }
+
+
+  unittest {
+    auto program = new Commander()
+      .option!("-o,--output <output-dir>", "An output directory")
+      .parse(["rdmd", "app.d", "-o", "fun-directory"]);
+    assert(program.flag("verbose") == false);
+    assert(program.flag("output") == true);
+    assert(program.param("output-dir") == "fun-directory");
+  }
+
+  unittest {
     import pyjamas;
     auto program1 = new Commander()
       .option!("-d,--data <input>", "The input")
