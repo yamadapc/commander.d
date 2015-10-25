@@ -1,6 +1,7 @@
 commander.d
 ===========
-Command-lines in D made easy. Easy command-line parsing based in commander.js.
+Command-line interfaces in D made easy. Easy command-line parsing based in
+commander.js.
 
 ## Usage
 Checking for flags being parsed:

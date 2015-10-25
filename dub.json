@@ -1,6 +1,6 @@
 {
   "name": "commander.d",
-  "description": "Command-lines in D made easy. Easy command-line parsing based in commander.js",
+  "description": "Command-line interfaces in D made easy. Easy command-line parsing based in commander.js.",
   "copyright": "Copyright © 2015, Pedro Tacla Yamada",
   "authors": [
     "Pedro Tacla Yamada"
