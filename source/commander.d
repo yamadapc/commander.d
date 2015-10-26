@@ -1,9 +1,14 @@
 import std.algorithm : canFind, map;
 import std.array : replace, split;
+import std.conv : to;
+import std.format : format;
+import std.stdio : File, stdin;
 import std.string : strip;
 
 class Commander {
   Option[string] options;
+  Option[] rawOptions;
+  string usageStr;
   string[string] params;
   bool[string] flags;
 
@@ -12,6 +17,7 @@ class Commander {
     options[option.optName] = option;
     options[option.optShort] = option;
     options[option.optLong] = option;
+    rawOptions ~= option;
     return this;
   }
 
@@ -43,6 +49,12 @@ class Commander {
     return this;
   }
 
+  Commander usage(string _usage)() {
+    usageStr = _usage;
+    return this;
+  }
+
+
   bool flag(string name) {
     if(name !in flags) {
       return false;
@@ -55,6 +67,59 @@ class Commander {
       return null;
     }
     return params[name];
+  }
+
+  string help() {
+    string output = "";
+
+    if(usageStr !is null) {
+      output ~= "\n  " ~ usageStr ~ "\n";
+    }
+
+    output ~= "\n  Options:\n\n";
+
+    auto flagDescs = rawOptions
+      .map!((o) => (o.optShort !is null ? o.optShort ~ ", ": "") ~ o.optLong);
+    ulong biggestFlag = 0;
+    foreach(desc; flagDescs) {
+      if(desc.length > biggestFlag) {
+        biggestFlag = desc.length;
+      }
+    }
+
+    foreach(i, option; rawOptions) {
+      auto flagDesc = flagDescs[i];
+      output ~= format(
+        "    %-" ~
+          (biggestFlag + 2).to!string ~
+          "s%s\n",
+        flagDesc,
+        option.description
+      );
+    }
+
+    return output;
+  }
+
+  void writeHelp(File output = stdin)() {
+    output.help().writeln;
+  }
+
+  unittest {
+    import std.stdio;
+    import pyjamas;
+    auto program = new Commander()
+      .usage!("Usage: command [flags] <stuff>")
+      .option!("-v,--verbose", "Be verbose")
+      .option!("-o, --output", "An output directory");
+    program.help().should.equal("
+  Usage: command [flags] <stuff>
+
+  Options:
+
+    -v, --verbose  Be verbose
+    -o, --output   An output directory
+");
   }
 
   unittest {
