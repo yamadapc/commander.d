@@ -130,7 +130,6 @@ class Commander {
     assert(program.param("output") is null);
   }
 
-
   unittest {
     auto program = new Commander()
       .option!("-o,--output <output-dir>", "An output directory")
@@ -201,34 +200,6 @@ class Option {
     optName = getOptName(optLong);
   }
 
-  bool hasParam() {
-    return paramName !is null;
-  }
-
-  bool test(string arg) {
-    return arg == optShort || arg == optLong;
-  }
-
-  static getOptName(string str) {
-    return str.replace("-", "");
-  }
-
-  static isFlag(string str) {
-    return str[0] == '-';
-  }
-
-  unittest {
-    import pyjamas;
-    Option.getOptName("-d").should.equal("d");
-    Option.getOptName("--verbose").should.equal("verbose");
-  }
-
-  unittest {
-    import pyjamas;
-    Option.isFlag("-d").should.equal(true);
-    Option.isFlag("--verbose").should.equal(true);
-  }
-
   unittest {
     import pyjamas;
     auto opt1 = new Option("-d, --data <input>", "The input");
@@ -249,5 +220,33 @@ class Option {
     opt2.optName.should.equal("verbose");
     opt2.paramRequired.should.equal(false);
     opt2.hasParam.should.equal(false);
+  }
+
+  bool hasParam() {
+    return paramName !is null;
+  }
+
+  bool test(string arg) {
+    return arg == optShort || arg == optLong;
+  }
+
+  static getOptName(string str) {
+    return str.replace("-", "");
+  }
+
+  unittest {
+    import pyjamas;
+    Option.getOptName("-d").should.equal("d");
+    Option.getOptName("--verbose").should.equal("verbose");
+  }
+
+  static isFlag(string str) {
+    return str[0] == '-';
+  }
+
+  unittest {
+    import pyjamas;
+    Option.isFlag("-d").should.equal(true);
+    Option.isFlag("--verbose").should.equal(true);
   }
 }
