@@ -1,9 +1,9 @@
 .dub
-__test__commander.d__
+__test__commander__
 docs.json
 __dummy.html
 *.o
 *.obj
-libcommander.d.a
+libcommander.a
 dub.selections.json
 research
