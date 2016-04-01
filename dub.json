@@ -14,7 +14,8 @@
         "source/"
       ],
       "dependencies": {
-        "pyjamas": ">=0.2.1"
+        "pyjamas": ">=0.2.1",
+        "bed": "*"
       }
     }
   ]

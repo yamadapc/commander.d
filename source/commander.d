@@ -108,11 +108,15 @@ class Commander {
   unittest {
     import std.stdio;
     import pyjamas;
+    import bed.d;
     auto program = new Commander()
       .usage!("Usage: command [flags] <stuff>")
       .option!("-v,--verbose", "Be verbose")
       .option!("-o, --output", "An output directory");
-    program.help().should.equal("
+
+    describe("program.help()", {
+      it("returns an usage message", {
+        program.help().should.equal("
   Usage: command [flags] <stuff>
 
   Options:
@@ -120,6 +124,8 @@ class Commander {
     -v, --verbose  Be verbose
     -o, --output   An output directory
 ");
+      });
+    });
   }
 
   unittest {
