@@ -14,6 +14,7 @@ class Commander {
   string usageStr;
   string[] usageParams;
   string[string] params;
+  string[] args;
 
   Commander option(string flag, string description)() {
     auto option = new Option(flag, description);
@@ -24,13 +25,13 @@ class Commander {
     return this;
   }
 
-  Commander parse(string[] args) {
+  Commander parse(string[] as) {
     bool inParam;
     Option curOption;
     auto i = 0;
     auto curUsageParams = usageParams[0..$];
 
-    foreach(ref arg; args[1..$]) {
+    foreach(ref arg; as[1..$]) {
       if(inParam && !Option.isFlag(arg)) {
         params[curOption.paramName] = arg;
       }
@@ -47,10 +48,15 @@ class Commander {
           }
 
           flags[option.optName] = true;
+        } else if (arg !in flags) {
+          auto option = new Option(arg);
+          flags[option.optName] = true;
         }
       } else if (!curUsageParams.empty) {
         params[curUsageParams[0]] = arg;
         curUsageParams.popFront();
+      } else {
+        args ~= arg;
       }
     }
 
@@ -255,6 +261,14 @@ class Option {
     opt2.test("--verbose").should.equal(true);
     opt2.paramName.should.equal(null);
     opt2.optName.should.equal("verbose");
+    opt2.paramRequired.should.equal(false);
+    opt2.hasParam.should.equal(false);
+  }
+
+  unittest {
+    import pyjamas;
+    auto opt2 = new Option("-v");
+    opt2.optName.should.equal("v");
     opt2.paramRequired.should.equal(false);
     opt2.hasParam.should.equal(false);
   }
