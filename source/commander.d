@@ -2,15 +2,18 @@ import std.algorithm : canFind, map;
 import std.array : replace, split;
 import std.conv : to;
 import std.format : format;
-import std.stdio : File, stdin;
+import std.stdio : File, stdin, writeln;
+import std.regex;
+import std.range : empty, popFront;
 import std.string : strip;
 
 class Commander {
-  Option[string] options;
   Option[] rawOptions;
-  string usageStr;
-  string[string] params;
+  Option[string] options;
   bool[string] flags;
+  string usageStr;
+  string[] usageParams;
+  string[string] params;
 
   Commander option(string flag, string description)() {
     auto option = new Option(flag, description);
@@ -24,8 +27,10 @@ class Commander {
   Commander parse(string[] args) {
     bool inParam;
     Option curOption;
+    auto i = 0;
+    auto curUsageParams = usageParams[0..$];
 
-    foreach(ref arg; args) {
+    foreach(ref arg; args[1..$]) {
       if(inParam && !Option.isFlag(arg)) {
         params[curOption.paramName] = arg;
       }
@@ -43,6 +48,9 @@ class Commander {
 
           flags[option.optName] = true;
         }
+      } else if (!curUsageParams.empty) {
+        params[curUsageParams[0]] = arg;
+        curUsageParams.popFront();
       }
     }
 
@@ -51,6 +59,7 @@ class Commander {
 
   Commander usage(string _usage)() {
     usageStr = _usage;
+    usageParams = new Usage(_usage).parts;
     return this;
   }
 
@@ -131,6 +140,16 @@ class Commander {
   }
 
   unittest {
+    import pyjamas;
+    auto program = new Commander()
+      .usage!("command <here>")
+      .parse(["command", "here"]);
+    assert(program.flag("verbose") == false);
+    assert(program.param("output") is null);
+    program.param("here").should.equal("here");
+  }
+
+  unittest {
     auto program = new Commander()
       .option!("-o,--output <output-dir>", "An output directory")
       .parse(["rdmd", "app.d", "-o", "fun-directory"]);
@@ -161,6 +180,24 @@ class Commander {
     program2.param("data").should.exist;
     program2.param("input").should.equal("input");
     program2.flag("data").should.equal(true);
+  }
+}
+
+class Usage {
+  static auto usageRegex = ctRegex!("<([^>]+)>");
+  string[] parts;
+
+  this(string usageStr) {
+    foreach(part; matchAll(usageStr, usageRegex)) {
+      parts ~= part[1];
+    }
+  }
+
+  unittest {
+    import pyjamas;
+    auto usage = new Usage("command <here>");
+    usage.parts.should.have.length(1);
+    usage.parts.should.contain("here");
   }
 }
 
