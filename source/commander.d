@@ -51,6 +51,7 @@ class Commander {
         } else if (arg !in flags) {
           auto option = new Option(arg);
           flags[option.optName] = true;
+          args ~= arg;
         }
       } else if (!curUsageParams.empty) {
         params[curUsageParams[0]] = arg;
@@ -91,7 +92,8 @@ class Commander {
       output ~= "\n  " ~ usageStr ~ "\n";
     }
 
-    output ~= "\n  Options:\n\n";
+    if(rawOptions.empty)
+      return output ~ "\n";
 
     auto flagDescs = rawOptions
       .map!((o) => (o.optShort !is null ? o.optShort ~ ", ": "") ~ o.optLong);
