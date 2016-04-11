@@ -31,7 +31,7 @@ assert(program.param("output-dir") == "fun-directory");
 - [ ] Custom types
 - [ ] Compile-time magic
 - [ ] Help message generation
-- [ ] Commands support
+- [x] Commands support
 
 ## License
 This code is licensed under the MIT license for Pedro Tacla Yamada. For more
